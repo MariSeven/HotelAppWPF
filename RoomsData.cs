@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HotelAppWPF
 {
-    internal class RoomsData
+    public class RoomsData
     {
         static int _nextRoomId = 0;
         public int RoomID { get;}

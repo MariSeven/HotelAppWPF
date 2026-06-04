@@ -8,13 +8,15 @@
         Style="{StaticResource BaseWindow}"
         WindowStartupLocation="CenterScreen">
     <StackPanel HorizontalAlignment="Center">
+        <Button x:Name="btnTheme" Content="Темная тема" Height="40" Margin="0 40 0 0" HorizontalAlignment="Left"/>
         <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Логин" Margin="0 120 35 0"/>
-            <TextBox x:Name="txtLogin" Margin="0 120 0 0" Height="35" Width="300"/>
+            <TextBlock Text="Логин" Margin="0 100 35 0"/>
+            <TextBox x:Name="txtLogin" Margin="0 100 0 0" Height="35" Width="300"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Пароль" Margin="0 20 20 0"/>
-            <TextBox x:Name="txtPassword" Margin="0 20 0 0" Height="35" Width="300"/>
+            <PasswordBox x:Name="txtPassword" Margin="0 20 0 0" Height="35" Width="300" 
+                         PasswordChar="*" />
         </StackPanel>
         <Button x:Name="btnLogin" Content="Войти" Margin="0 70 0 50" />
         <Button x:Name="btnExit" Content="Выйти" />
