@@ -9,6 +9,7 @@
             <Setter Property="Height" Value="60"/>
             <Setter Property="FontSize" Value="24"/>
             <Setter Property="Background" Value="#8080FF"/>
+            <Setter Property="Foreground" Value="White"/>
         </Style>
         <Style x:Key="BaseWindow" TargetType="Window">
             <Setter Property="Title" Value="Приложение 'Гостиница'"/>
