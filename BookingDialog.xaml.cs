@@ -13,9 +13,9 @@ using System.Windows.Shapes;
 namespace HotelAppWPF
 {
     /// <summary>
-    /// Логика взаимодействия для BookingDialog.xaml
+    ///
     /// </summary>
-    public partial class BookingDialog : Window
+    public partial class BookingDialog : Window, IThemable
     {
         private BookingData _editingBooking;
         private bool _isEditMode;
@@ -27,6 +27,7 @@ namespace HotelAppWPF
         public BookingDialog(BookingData booking)
         {
             InitializeComponent();
+            UpdateTheme();
             _editingBooking = booking;
             _isEditMode = booking != null;
 
@@ -73,7 +74,19 @@ namespace HotelAppWPF
                 dpCheckOut.SelectedDate = DateTime.Today.AddDays(1);
             }
         }
+        public void UpdateTheme()
+        {
+            string themePrefix = App.IsDarkTheme ? "DarkTheme" : "LightTheme";
 
+            // Применяем стили к элементам окна
+            this.Style = (Style)Application.Current.TryFindResource(themePrefix);
+            txt1.Style = (Style)Application.Current.TryFindResource($"{themePrefix}TXT");
+            txt2.Style = (Style)Application.Current.TryFindResource($"{themePrefix}TXT");
+            txt3.Style = (Style)Application.Current.TryFindResource($"{themePrefix}TXT");
+            txt4.Style = (Style)Application.Current.TryFindResource($"{themePrefix}TXT");
+            btnSave.Style = (Style)Application.Current.TryFindResource($"{themePrefix}BTN");
+            btnCancel.Style = (Style)Application.Current.TryFindResource($"{themePrefix}BTN");
+        }
         private void ValidateInputs(object sender, RoutedEventArgs e)
         {
             txtError.Visibility = Visibility.Collapsed;
@@ -119,23 +132,15 @@ namespace HotelAppWPF
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (!ValidateAllInputs())
             {
-                if (!ValidateAllInputs())
-                {
-                    MessageBox.Show("Исправьте ошибки в полях ввода", "Ошибка валидации",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
+                MessageBox.Show("Исправьте ошибки в полях ввода", "Ошибка валидации",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
-                DialogResult = true;
-                Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Произошла ошибка при сохранении данных", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            DialogResult = true;
+            Close();
         }
 
         private bool ValidateAllInputs()
@@ -163,17 +168,12 @@ namespace HotelAppWPF
 
         public BookingData GetBookingData()
         {
-            var selectedItem = (ComboBoxItem)cmbRoomNumber.SelectedItem;
-            int roomNumber = (int)selectedItem.Tag;
-
+            string fullName = txtFullName.Text.Trim();
+            int roomNumber = (int)((ComboBoxItem)cmbRoomNumber.SelectedItem).Tag;
             DateOnly checkIn = DateOnly.FromDateTime(dpCheckIn.SelectedDate.Value);
             DateOnly checkOut = DateOnly.FromDateTime(dpCheckOut.SelectedDate.Value);
 
-            return new BookingData(
-                txtFullName.Text.Trim(),
-                roomNumber,
-                checkIn,
-                checkOut);
+            return new BookingData(fullName, roomNumber, checkIn, checkOut);
         }
     }
 }

@@ -5,21 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HotelAppWPF"
         mc:Ignorable="d"
-        Style="{StaticResource BaseWindow}"
-        WindowStartupLocation="CenterScreen">
+        Style="{DynamicResource LightTheme}" Closing="Window_Closing">
     <StackPanel HorizontalAlignment="Center">
-        <Button x:Name="btnTheme" Content="Темная тема" Height="40" Margin="0 40 0 0" HorizontalAlignment="Left"/>
+        <Button x:Name="btnTheme" Style="{DynamicResource LightThemeBTN}" Content="Темная тема" Height="40" Margin="0 40 0 0" HorizontalAlignment="Left"/>
         <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Логин" Margin="0 100 35 0"/>
-            <TextBox x:Name="txtLogin" Margin="0 100 0 0" Height="35" Width="300"/>
+            <TextBlock x:Name="txtlogin" Style="{DynamicResource LightThemeTXT}" Text="Логин" Margin="0 100 35 0"/>
+            <TextBox x:Name="txtLogin" Style="{DynamicResource LightThemeTXTB}" Margin="0 100 0 0" Height="35" Width="300"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Пароль" Margin="0 20 20 0"/>
-            <PasswordBox x:Name="txtPassword" Margin="0 20 0 0" Height="35" Width="300" 
+            <TextBlock x:Name="txtpassword" Style="{DynamicResource LightThemeTXT}" Text="Пароль" Margin="0 20 20 0"/>
+            <PasswordBox x:Name="txtPassword" Style="{DynamicResource LightThemeTXTP}" Margin="4 20 0 0" Height="35" Width="300" 
                          PasswordChar="*" />
         </StackPanel>
-        <Button x:Name="btnLogin" Content="Войти" Margin="0 70 0 50" />
-        <Button x:Name="btnExit" Content="Выйти" />
+        <Button x:Name="btnLogin" Style="{DynamicResource LightThemeBTN}" Content="Войти" Margin="0 70 0 50" />
+        <Button x:Name="btnExit" Style="{DynamicResource LightThemeBTN}" Content="Выйти" />
 
     </StackPanel>
 </Window>

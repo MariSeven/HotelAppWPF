@@ -4,27 +4,67 @@
              xmlns:local="clr-namespace:HotelAppWPF"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <Style TargetType="Button">
+        <Style x:Key="LightThemeBTN" TargetType="Button">
             <Setter Property="Width" Value="200"/>
             <Setter Property="Height" Value="60"/>
-            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontSize" Value="18"/>
             <Setter Property="Background" Value="#8080FF"/>
             <Setter Property="Foreground" Value="White"/>
         </Style>
-        <Style x:Key="BaseWindow" TargetType="Window">
+        <Style x:Key="LightTheme" TargetType="Window">
             <Setter Property="Title" Value="Приложение 'Гостиница'"/>
             <Setter Property="Height" Value="1024"/>
             <Setter Property="Width" Value="600"/>
             <Setter Property="Background" Value="#EEEEFF"/>
             <Setter Property="ResizeMode" Value="NoResize"/>
         </Style>
-        <Style TargetType="TextBlock">
+        <Style x:Key="LightThemeTXT" TargetType="TextBlock">
             <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontSize" Value="18"/>
         </Style>
-        <Style TargetType="TextBox">
+        <Style x:Key="LightThemeTXTB" TargetType="TextBox">
             <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+        <Style x:Key="LightThemeTXTP" TargetType="PasswordBox">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+        <Style x:Key="LightThemeLST" TargetType="ListView">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Background" Value="#5050AA"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+
+        <Style x:Key="DarkThemeBTN" TargetType="Button">
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Background" Value="#404040"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style x:Key="DarkTheme" TargetType="Window">
+            <Setter Property="Title" Value="Приложение 'Гостиница'"/>
+            <Setter Property="Height" Value="1024"/>
+            <Setter Property="Width" Value="600"/>
+            <Setter Property="Background" Value="#202040"/>
+            <Setter Property="ResizeMode" Value="NoResize"/>
+        </Style>
+        <Style x:Key="DarkThemeTXT" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+        <Style x:Key="DarkThemeTXTB" TargetType="TextBox">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#404040"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+        <Style x:Key="DarkThemeTXTP" TargetType="PasswordBox">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#404040"/>
+            <Setter Property="FontSize" Value="18"/>
         </Style>
 
     </Application.Resources>

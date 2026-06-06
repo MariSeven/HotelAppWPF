@@ -5,31 +5,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HotelAppWPF"
         mc:Ignorable="d"
-        Style="{StaticResource BaseWindow}"
-        WindowStartupLocation="CenterScreen">
-    <Grid Margin="25">
+        Style="{DynamicResource LightTheme}" Closing="Window_Closing">
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="491*"/>
+            <ColumnDefinition Width="69*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel HorizontalAlignment="Left">
-            <Button x:Name="btnTheme" Content="Темная тема" Height="40" Margin="0 0 0 15" HorizontalAlignment="Left"/>
+        <StackPanel HorizontalAlignment="Left" Grid.ColumnSpan="2">
+            <Button x:Name="btnTheme" Style="{DynamicResource LightThemeBTN}" Content="Темная тема" Height="30" Margin="0 0 0 15" HorizontalAlignment="Left"/>
             <StackPanel Orientation="Horizontal">
-                <Button x:Name="btnAdd" Content="Добавить" Height="40" Margin="0 0 10 15" Width="130"/>
-                <Button x:Name="btnEdit" Content="Редакт." Height="40" Margin="0 0 10 15" Width="130"/>
-                <Button x:Name="btnDelete" Content="Удалить" Height="40" Margin="0 0 10 15" Width="130"/>
-                <Button x:Name="btnUpdate" Content="Обновить" Height="40" Margin="0 0 10 15" Width="130"/>
+                <Button x:Name="btnAdd" Style="{DynamicResource LightThemeBTN}" Content="Добавить" Height="40" Margin="0 0 10 15" Width="130"/>
+                <Button x:Name="btnEdit" Style="{DynamicResource LightThemeBTN}" Content="Редакт." Height="40" Margin="0 0 10 15" Width="130"/>
+                <Button x:Name="btnDelete" Style="{DynamicResource LightThemeBTN}" Content="Удалить" Height="40" Margin="0 0 10 15" Width="130"/>
+                <Button x:Name="btnUpdate" Style="{DynamicResource LightThemeBTN}" Content="Обновить" Height="40" Margin="0 0 10 15" Width="130"/>
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Row="1" HorizontalAlignment="Left" Orientation="Horizontal">
-            <Button x:Name="btnRoom" Content="Номера" Height="40" Width="120" Background="#BBBBFF"/>
-            <Button x:Name="btnBooking" Content="Бронирования" Height="40" Width="180" Background="#BBBBBB"/>
+            <Button x:Name="btnRoom" Style="{DynamicResource LightThemeBTN}" Content="Номера" Height="40" Width="120" Background="#6060AA"/>
+            <Button x:Name="btnBooking" Style="{DynamicResource LightThemeBTN}" Content="Бронирования" Height="40" Width="180" Background="#BBBBBB" Foreground="#707070"/>
         </StackPanel>
-        <ListView x:Name="lstRoom" Grid.Row="2" Background="#BBBBFF" Visibility="Visible">
+        <ListView x:Name="lstRoom" Grid.Row="2" Style="{DynamicResource LightThemeLST}" Visibility="Visible" Grid.ColumnSpan="2">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="ID" Width="40"  DisplayMemberBinding="{Binding RoomID}"/>
+                    <GridViewColumn Header="ID" Width="40" DisplayMemberBinding="{Binding RoomID}"/>
                     <GridViewColumn Header="Номер" Width="80" DisplayMemberBinding="{Binding RoomNumber}"/>
                     <GridViewColumn Header="Класс" Width="120" DisplayMemberBinding="{Binding RoomClass}"/>
                     <GridViewColumn Header="Вместимость" Width="100" DisplayMemberBinding="{Binding RoomCapacity}"/>
@@ -38,7 +41,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <ListView x:Name="lstBooking" Grid.Row="2" Background="#BBBBFF" Visibility="Collapsed">
+        <ListView x:Name="lstBooking" Grid.Row="2" Style="{DynamicResource LightThemeLST}" Visibility="Collapsed" Grid.ColumnSpan="2">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" Width="40"  DisplayMemberBinding="{Binding BookingID}"/>

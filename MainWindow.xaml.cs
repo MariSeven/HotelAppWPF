@@ -12,13 +12,15 @@ using System.Windows.Shapes;
 namespace HotelAppWPF
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IThemable
     {
+        public int podtv = 0;
         public MainWindow()
         {
             InitializeComponent();
+            UpdateTheme();
             btnLogin.Click += BtnLogin_Click;
             btnExit.Click += BtnExit_Click;
             btnTheme.Click += BtnTheme_Click;
@@ -26,34 +28,19 @@ namespace HotelAppWPF
 
         public void UpdateTheme()
         {
-            if (App.IsDarkTheme)
-            {
-                this.Background = Brushes.DarkSlateGray;
-                btnTheme.Background = Brushes.SlateGray;
-                btnLogin.Background = Brushes.SlateGray;
-                btnExit.Background = Brushes.SlateGray;
-                btnTheme.Foreground = Brushes.White;
-                btnLogin.Foreground = Brushes.White;
-                btnExit.Foreground = Brushes.White;
-                txtLogin.Background = Brushes.DarkGray;
-                txtLogin.Foreground = Brushes.White;
-                txtPassword.Background = Brushes.DarkGray;
-                txtPassword.Foreground = Brushes.White;
-            }
-            else
-            {
-                this.Background = Brushes.LightBlue;
-                btnTheme.Background = Brushes.LightBlue;
-                btnLogin.Background = Brushes.LightBlue;
-                btnExit.Background = Brushes.LightBlue;
-                btnTheme.Foreground = Brushes.White;
-                btnLogin.Foreground = Brushes.White;
-                btnExit.Foreground = Brushes.White;
-                txtLogin.Background = Brushes.White;
-                txtLogin.Foreground = Brushes.Black;
-                txtPassword.Background = Brushes.White;
-                txtPassword.Foreground = Brushes.Black;
-            }
+            string themePrefix = App.IsDarkTheme ? "DarkTheme" : "LightTheme";
+
+            // Применяем стили к элементам окна
+            this.Style = (Style)Application.Current.TryFindResource(themePrefix);
+            btnTheme.Style = (Style)Application.Current.TryFindResource($"{themePrefix}BTN");
+            btnLogin.Style = (Style)Application.Current.TryFindResource($"{themePrefix}BTN");
+            btnExit.Style = (Style)Application.Current.TryFindResource($"{themePrefix}BTN");
+            txtLogin.Style = (Style)Application.Current.TryFindResource($"{themePrefix}TXTB");
+            txtPassword.Style = (Style)Application.Current.TryFindResource($"{themePrefix}TXTP");
+            txtlogin.Style = (Style)Application.Current.TryFindResource($"{themePrefix}TXT");
+            txtpassword.Style = (Style)Application.Current.TryFindResource($"{themePrefix}TXT");
+
+            btnTheme.Content = App.IsDarkTheme ? "Светлая тема" : "Темная тема";
         }
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
@@ -67,6 +54,7 @@ namespace HotelAppWPF
                     // Успешная авторизация
                     account mainAccount = new account();
                     mainAccount.Show();
+                    podtv = 1;
                     this.Close();
                 }
                 else
@@ -87,7 +75,7 @@ namespace HotelAppWPF
 
         private void BtnExit_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            Close();
         }
 
         private void BtnTheme_Click(object sender, RoutedEventArgs e)
@@ -103,6 +91,18 @@ namespace HotelAppWPF
                     {
                         btnTheme.Content = App.IsDarkTheme ? "Светлая тема" : "Темная тема";
                     });
+                }
+            }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (podtv == 0)
+            {
+                MessageBoxResult result = MessageBox.Show("Вы точно хотите закрыть приложение?", "Подтверждение закрытия", MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.No)
+                {
+                    e.Cancel = true;
                 }
             }
         }

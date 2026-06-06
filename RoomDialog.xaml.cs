@@ -13,9 +13,9 @@ using System.Windows.Shapes;
 namespace HotelAppWPF
 {
     /// <summary>
-    /// Логика взаимодействия для RoomDialog.xaml
+    /// 
     /// </summary>
-    public partial class RoomDialog : Window
+    public partial class RoomDialog : Window, IThemable
     {
         private RoomsData _editingRoom;
         private bool _isEditMode;
@@ -23,10 +23,11 @@ namespace HotelAppWPF
         public RoomDialog() : this(null)
         {
         }
-
+        
         public RoomDialog(RoomsData room)
         {
             InitializeComponent();
+            UpdateTheme();
             _editingRoom = room;
             _isEditMode = room != null;
 
@@ -49,10 +50,25 @@ namespace HotelAppWPF
                 cmbStatus.SelectedIndex = 0;
             }
 
+
             // Добавляем валидацию
             txtRoomNumber.TextChanged += ValidateInputs;
             txtCapacity.TextChanged += ValidateInputs;
             txtPrice.TextChanged += ValidateInputs;
+        }
+        public void UpdateTheme()
+        {
+            string themePrefix = App.IsDarkTheme ? "DarkTheme" : "LightTheme";
+
+            // Применяем стили к элементам окна
+            this.Style = (Style)Application.Current.TryFindResource(themePrefix);
+            txt1.Style = (Style)Application.Current.TryFindResource($"{themePrefix}TXT");
+            txt2.Style = (Style)Application.Current.TryFindResource($"{themePrefix}TXT");
+            txt3.Style = (Style)Application.Current.TryFindResource($"{themePrefix}TXT");
+            txt4.Style = (Style)Application.Current.TryFindResource($"{themePrefix}TXT");
+            txt5.Style = (Style)Application.Current.TryFindResource($"{themePrefix}TXT");
+            btnSave.Style = (Style)Application.Current.TryFindResource($"{themePrefix}BTN");
+            btnCancel.Style = (Style)Application.Current.TryFindResource($"{themePrefix}BTN");
         }
 
         private int GetClassIndex(string className)
@@ -86,6 +102,17 @@ namespace HotelAppWPF
                 return;
             }
 
+            // Проверка на дубликат
+            if (RoomsData.roomData.Any(r => r.RoomNumber == roomNumber &&
+                (!(_isEditMode && _editingRoom != null) || r.RoomID != _editingRoom.RoomID)))
+            {
+                txtRoomNumber.BorderBrush = Brushes.Red;
+                txtError.Text = $"Комната с номером {roomNumber} уже существует";
+                txtError.Visibility = Visibility.Visible;
+                btnSave.IsEnabled = false;
+                return;
+            }
+
             // Валидация вместимости
             if (!int.TryParse(txtCapacity.Text, out int capacity) || capacity < 1 || capacity > 4)
             {
@@ -109,29 +136,29 @@ namespace HotelAppWPF
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (!ValidateAllInputs())
             {
-                if (!ValidateAllInputs())
-                {
-                    MessageBox.Show("Исправьте ошибки в полях ввода", "Ошибка валидации",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
+                MessageBox.Show("Исправьте ошибки в полях ввода", "Ошибка валидации",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
-                DialogResult = true;
-                Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Произошла ошибка при сохранении данных", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            DialogResult = true;
+            Close();
         }
 
         private bool ValidateAllInputs()
         {
             if (!int.TryParse(txtRoomNumber.Text, out int roomNumber) || roomNumber < 1 || roomNumber > 999)
                 return false;
+            foreach (var room in RoomsData.roomData)
+            {
+                if (_isEditMode && _editingRoom != null && room.RoomID == _editingRoom.RoomID)
+                    continue;
+
+                if (room.RoomNumber == roomNumber)
+                    return false;
+            }
 
             if (!int.TryParse(txtCapacity.Text, out int capacity) || capacity < 1 || capacity > 4)
                 return false;
@@ -153,27 +180,12 @@ namespace HotelAppWPF
             string roomClass = ((ComboBoxItem)cmbRoomClass.SelectedItem).Content.ToString();
             string status = ((ComboBoxItem)cmbStatus.SelectedItem).Content.ToString();
 
-            if (_isEditMode)
-            {
-                return new RoomsData(
-                    int.Parse(txtRoomNumber.Text),
-                    roomClass,
-                    int.Parse(txtCapacity.Text),
-                    decimal.Parse(txtPrice.Text),
-                    status)
-                {
-                    // Сохраняем ID при редактировании
-                };
-            }
-            else
-            {
-                return new RoomsData(
-                    int.Parse(txtRoomNumber.Text),
-                    roomClass,
-                    int.Parse(txtCapacity.Text),
-                    decimal.Parse(txtPrice.Text),
-                    status);
-            }
+            return new RoomsData(
+                int.Parse(txtRoomNumber.Text),
+                roomClass,
+                int.Parse(txtCapacity.Text),
+                decimal.Parse(txtPrice.Text),
+                status);
         }
     }
 }

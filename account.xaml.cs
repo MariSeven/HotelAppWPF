@@ -13,15 +13,16 @@ using System.Windows.Shapes;
 namespace HotelAppWPF
 {
     /// <summary>
-    /// Логика взаимодействия для account.xaml
+    ///
     /// </summary>
-    public partial class account : Window
+    public partial class account : Window, IThemable
     {
         private bool isRoomView = true;
 
         public account()
         {
             InitializeComponent();
+            UpdateTheme();
             InitializeEventHandlers();
             LoadRoomsData();
         }
@@ -41,50 +42,19 @@ namespace HotelAppWPF
 
         public void UpdateTheme()
         {
-            if (App.IsDarkTheme)
-            {
-                this.Background = Brushes.DarkSlateGray;
-                btnTheme.Background = Brushes.SlateGray;
-                btnAdd.Background = Brushes.SlateGray;
-                btnEdit.Background = Brushes.SlateGray;
-                btnDelete.Background = Brushes.SlateGray;
-                btnUpdate.Background = Brushes.SlateGray;
-                btnRoom.Background = Brushes.SlateGray;
-                btnBooking.Background = Brushes.Gray;
+            string themePrefix = App.IsDarkTheme ? "DarkTheme" : "LightTheme";
 
-                btnTheme.Foreground = Brushes.White;
-                btnAdd.Foreground = Brushes.White;
-                btnEdit.Foreground = Brushes.White;
-                btnDelete.Foreground = Brushes.White;
-                btnUpdate.Foreground = Brushes.White;
-                btnRoom.Foreground = Brushes.White;
-                btnBooking.Foreground = Brushes.White;
+            // Применяем стили к элементам окна
+            this.Style = (Style)Application.Current.TryFindResource(themePrefix);
+            btnTheme.Style = (Style)Application.Current.TryFindResource($"{themePrefix}BTN");
+            btnAdd.Style = (Style)Application.Current.TryFindResource($"{themePrefix}BTN");
+            btnEdit.Style = (Style)Application.Current.TryFindResource($"{themePrefix}BTN");
+            btnDelete.Style = (Style)Application.Current.TryFindResource($"{themePrefix}BTN");
+            btnUpdate.Style = (Style)Application.Current.TryFindResource($"{themePrefix}BTN");
+            btnRoom.Style = (Style)Application.Current.TryFindResource($"{themePrefix}BTN");
+            btnBooking.Style = (Style)Application.Current.TryFindResource($"{themePrefix}BTN");
 
-                lstRoom.Background = Brushes.DarkGray;
-                lstBooking.Background = Brushes.DarkGray;
-            }
-            else
-            {
-                this.Background = Brushes.LightBlue;
-                btnTheme.Background = Brushes.LightBlue;
-                btnAdd.Background = Brushes.LightBlue;
-                btnEdit.Background = Brushes.LightBlue;
-                btnDelete.Background = Brushes.LightBlue;
-                btnUpdate.Background = Brushes.LightBlue;
-                btnRoom.Background = Brushes.LightBlue;
-                btnBooking.Background = Brushes.LightGray;
-
-                btnTheme.Foreground = Brushes.White;
-                btnAdd.Foreground = Brushes.White;
-                btnEdit.Foreground = Brushes.White;
-                btnDelete.Foreground = Brushes.White;
-                btnUpdate.Foreground = Brushes.White;
-                btnRoom.Foreground = Brushes.White;
-                btnBooking.Foreground = Brushes.Black;
-
-                lstRoom.Background = Brushes.LightBlue;
-                lstBooking.Background = Brushes.LightBlue;
-            }
+            btnTheme.Content = App.IsDarkTheme ? "Светлая тема" : "Темная тема";
         }
         private void BtnTheme_Click(object sender, RoutedEventArgs e)
         {
@@ -98,8 +68,10 @@ namespace HotelAppWPF
             isRoomView = true;
             lstRoom.Visibility = Visibility.Visible;
             lstBooking.Visibility = Visibility.Collapsed;
-            btnRoom.Background = System.Windows.Media.Brushes.LightBlue;
-            btnBooking.Background = System.Windows.Media.Brushes.LightGray;
+            btnBooking.Background = (Brush)new BrushConverter().ConvertFrom("#BBBBBB");
+            btnBooking.Foreground = (Brush)new BrushConverter().ConvertFrom("#707070");
+            btnRoom.Background = (Brush)new BrushConverter().ConvertFrom("#6060AA");
+            btnRoom.Foreground = (Brush)new BrushConverter().ConvertFrom("#FFFFFF");
             LoadRoomsData();
         }
 
@@ -108,8 +80,10 @@ namespace HotelAppWPF
             isRoomView = false;
             lstRoom.Visibility = Visibility.Collapsed;
             lstBooking.Visibility = Visibility.Visible;
-            btnRoom.Background = System.Windows.Media.Brushes.LightGray;
-            btnBooking.Background = System.Windows.Media.Brushes.LightBlue;
+            btnRoom.Background = (Brush)new BrushConverter().ConvertFrom("#BBBBBB");
+            btnRoom.Foreground = (Brush)new BrushConverter().ConvertFrom("#707070");
+            btnBooking.Background = (Brush)new BrushConverter().ConvertFrom("#6060AA");
+            btnBooking.Foreground = (Brush)new BrushConverter().ConvertFrom("#FFFFFF");
             LoadBookingsData();
         }
 
@@ -127,146 +101,121 @@ namespace HotelAppWPF
 
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (isRoomView)
             {
-                if (isRoomView)
+                var dialog = new RoomDialog();
+                if (dialog.ShowDialog() == true)
                 {
-                    var dialog = new RoomDialog();
-                    if (dialog.ShowDialog() == true)
-                    {
-                        var newRoom = dialog.GetRoomData();
-                        RoomsData.roomData.Add(newRoom);
-                        LoadRoomsData();
-                    }
-                }
-                else
-                {
-                    var dialog = new BookingDialog();
-                    if (dialog.ShowDialog() == true)
-                    {
-                        var newBooking = dialog.GetBookingData();
-                        BookingData.bookingData.Add(newBooking);
-                        LoadBookingsData();
-                    }
+                    var newRoom = dialog.GetRoomData();
+                    RoomsData.roomData.Add(newRoom);
+                    LoadRoomsData();
                 }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show("Произошла ошибка при добавлении записи.", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                var dialog = new BookingDialog();
+                if (dialog.ShowDialog() == true)
+                {
+                    var newBooking = dialog.GetBookingData();
+                    BookingData.bookingData.Add(newBooking);
+                    LoadBookingsData();
+                }
             }
         }
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (isRoomView)
             {
-                if (isRoomView)
+                if (lstRoom.SelectedItem is RoomsData selectedRoom)
                 {
-                    if (lstRoom.SelectedItem is RoomsData selectedRoom)
+                    var dialog = new RoomDialog(selectedRoom);
+                    if (dialog.ShowDialog() == true)
                     {
-                        var dialog = new RoomDialog(selectedRoom);
-                        if (dialog.ShowDialog() == true)
+                        var updatedRoom = dialog.GetRoomData();
+                        int index = RoomsData.roomData.IndexOf(selectedRoom);
+                        if (index >= 0)
                         {
-                            // Обновляем данные
-                            var updatedRoom = dialog.GetRoomData();
-                            int index = RoomsData.roomData.IndexOf(selectedRoom);
-                            if (index >= 0)
-                            {
-                                RoomsData.roomData[index] = updatedRoom;
-                            }
-                            LoadRoomsData();
+                            RoomsData.roomData[index] = updatedRoom;
                         }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Выберите запись для редактирования", "Внимание",
-                            MessageBoxButton.OK, MessageBoxImage.Warning);
+                        LoadRoomsData();
                     }
                 }
                 else
                 {
-                    if (lstBooking.SelectedItem is BookingData selectedBooking)
-                    {
-                        var dialog = new BookingDialog(selectedBooking);
-                        if (dialog.ShowDialog() == true)
-                        {
-                            var updatedBooking = dialog.GetBookingData();
-                            int index = BookingData.bookingData.IndexOf(selectedBooking);
-                            if (index >= 0)
-                            {
-                                BookingData.bookingData[index] = updatedBooking;
-                            }
-                            LoadBookingsData();
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Выберите запись для редактирования", "Внимание",
-                            MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
+                    MessageBox.Show("Выберите запись для редактирования", "Внимание",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show("Произошла ошибка при редактировании записи.", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                if (lstBooking.SelectedItem is BookingData selectedBooking)
+                {
+                    var dialog = new BookingDialog(selectedBooking);
+                    if (dialog.ShowDialog() == true)
+                    {
+                        var updatedBooking = dialog.GetBookingData();
+                        int index = BookingData.bookingData.IndexOf(selectedBooking);
+                        if (index >= 0)
+                        {
+                            BookingData.bookingData[index] = updatedBooking;
+                        }
+                        LoadBookingsData();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Выберите запись для редактирования", "Внимание",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
         }
 
         private void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (isRoomView)
             {
-                if (isRoomView)
+                if (lstRoom.SelectedItem is RoomsData selectedRoom)
                 {
-                    if (lstRoom.SelectedItem is RoomsData selectedRoom)
-                    {
-                        var result = MessageBox.Show(
-                            $"Удалить запись о номере {selectedRoom.RoomNumber}?",
-                            "Подтверждение удаления",
-                            MessageBoxButton.YesNo,
-                            MessageBoxImage.Question);
+                    var result = MessageBox.Show(
+                        $"Удалить запись о номере {selectedRoom.RoomNumber}?",
+                        "Подтверждение удаления",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question);
 
-                        if (result == MessageBoxResult.Yes)
-                        {
-                            RoomsData.roomData.Remove(selectedRoom);
-                            LoadRoomsData();
-                        }
-                    }
-                    else
+                    if (result == MessageBoxResult.Yes)
                     {
-                        MessageBox.Show("Выберите запись для удаления", "Внимание",
-                            MessageBoxButton.OK, MessageBoxImage.Warning);
+                        RoomsData.roomData.Remove(selectedRoom);
+                        LoadRoomsData();
                     }
                 }
                 else
                 {
-                    if (lstBooking.SelectedItem is BookingData selectedBooking)
-                    {
-                        var result = MessageBox.Show(
-                            $"Удалить бронирование для {selectedBooking.BookingFullNameLodger}?",
-                            "Подтверждение удаления",
-                            MessageBoxButton.YesNo,
-                            MessageBoxImage.Question);
-
-                        if (result == MessageBoxResult.Yes)
-                        {
-                            BookingData.bookingData.Remove(selectedBooking);
-                            LoadBookingsData();
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Выберите запись для удаления", "Внимание",
-                            MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
+                    MessageBox.Show("Выберите запись для удаления", "Внимание",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show("Произошла ошибка при удалении записи.", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                if (lstBooking.SelectedItem is BookingData selectedBooking)
+                {
+                    var result = MessageBox.Show(
+                        $"Удалить бронирование для {selectedBooking.BookingFullNameLodger}?",
+                        "Подтверждение удаления",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question);
+
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        BookingData.bookingData.Remove(selectedBooking);
+                        LoadBookingsData();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Выберите запись для удаления", "Внимание",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
         }
 
@@ -286,6 +235,15 @@ namespace HotelAppWPF
         private void LstBooking_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             BtnEdit_Click(sender, e);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Вы точно хотите закрыть приложение?", "Подтверждение закрытия", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.No)
+            {
+                e.Cancel = true;
+            }
         }
     }
 }

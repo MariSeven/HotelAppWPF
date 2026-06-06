@@ -24,13 +24,9 @@ namespace HotelAppWPF
 
         private void UpdateWindowTheme(Window window)
         {
-            if (window is MainWindow mainWindow)
+            if (window is IThemable themable)
             {
-                mainWindow.UpdateTheme();
-            }
-            else if (window is account accountWindow)
-            {
-                accountWindow.UpdateTheme();
+                themable.UpdateTheme();
             }
         }
     }
